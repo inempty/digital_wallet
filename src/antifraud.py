@@ -43,13 +43,15 @@ class usernet(object):
 		read_batch function reads batch_payment from file,
 		constructing the initial state of user network.
 		"""
+
 		with open(self.bfname, 'r') as f:
 			f.readline()
 			line = f.readline()
 			while(line):
-				id1 = line.split()[2].rstrip(',')
-				id2 = line.split()[3].rstrip(',')
-				amount = float(line.split()[4].rstrip(','))
+				linelist = line.split(',')
+				id1 = linelist[1]
+				id2 = linelist[2]
+				amount = float(linelist[3])
 				if id1 in self.users:
 					self.users[id1].add(id2)
 
@@ -217,10 +219,10 @@ with open(cwd + stream_file, 'r') as f:
 	
 	while line:
 
-		linelist = line.split() 
-		id1 = linelist[2].rstrip(',')
-		id2 = linelist[3].rstrip(',')
-		amount = float(linelist[4].rstrip(','))
+		linelist = line.split(',') 
+		id1 = linelist[1]
+		id2 = linelist[2]
+		amount = float(linelist[3])
 
 		for u in range(3):
 			result, degree, ptype = net1.verify(u + 1, id1, id2, amount)
