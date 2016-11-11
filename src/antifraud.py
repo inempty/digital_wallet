@@ -11,9 +11,10 @@ class usernet(object):
 	and each user has an array recording its direct 
 	friends. (adjacency list rep. of graph)
 
-	the class has two attribute:
+	the class has three attribute:
 	bfname: filename of batch_payment info.
 	users: dict storing all users and their friends
+	user_stat: some statistical data of users
 	
 	and three methods:
 	read_batch: construct user network with batch file
@@ -67,30 +68,19 @@ class usernet(object):
 					self.user_stat[id1]["amount_sig"] =\
 							np.sqrt((sigo**2 * (no) + amount**2)/ float(no + 1))
 
+					"""calculate new average/variance"""
 				else:
 					self.users[id1] = {id2}
 
 					self.user_stat[id1] = {"pay_num": 1, "amount_avg": amount, "amount_sig": 0.0}
-					#print id1, self.user_stat[id1], "+"
 
 				if id2 in self.users:
 					self.users[id2].add(id1)
-					"""
-					no = self.user_stat[id2].["pay_num"] 
-					avgo = self.user_stat[id2].["amount_tot"] / float(no)
-					sigo = self.user_stat[id2].["amount_sig"] 
-
-					self.user_stat[id2].["pay_num"] += 1
-					self.user_stat[id2].["amount_tot"] += amount
-					self.user_stat[id2].["amount_sig"] =\
-							np.sqrt((sigo**2 * (no - 1) + amount**2)/ float(no))
-					"""
 				else:
 					self.users[id2] = {id1}
 					
 					self.user_stat[id2] = {"pay_num": 0, "amount_avg": 0, "amount_sig": 0.0}
 					
-				#print id1, id2
 				line = f.readline()
 
 	def verify(self, feature, id1, id2, amount):
@@ -165,6 +155,7 @@ class usernet(object):
 		"""
 		id1: string type
 		id2: string type
+		amount: float type, amount of payment
 		"""
 		if id1 not in self.users:
 			self.users[id1] = {id2}
@@ -183,6 +174,7 @@ class usernet(object):
 			self.user_stat[id1]["amount_avg"] += amount / float(no + 1)
 			self.user_stat[id1]["amount_sig"] =\
 					np.sqrt((sigo**2 * (no) + amount**2)/ float(no + 1))
+			"""calculate new average/variance"""
 
 
 		if id2 not in self.users:
